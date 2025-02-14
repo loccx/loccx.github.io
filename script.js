@@ -9,5 +9,11 @@ function typeWriter() {
     }
 }
 
+function restartTyping() {
+    index = 0;
+    document.getElementById("letter").innerHTML = "";
+    typeWriter();
+}
+
 window.onload = typeWriter;
 

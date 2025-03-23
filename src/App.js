@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 function App() {
   const [para, setPara] = useState('');
-  const paragraph = 'bitches';
+  const paragraph = 'hialice\nasdfasdfasdf';
 
   useEffect(() => {
     let index = 0;
@@ -19,7 +19,7 @@ function App() {
 
   return (
     <>
-      <span data-typewriter = "on">Hello World!</span>
+      <span data-typewriter = 'on'>Hello World!</span>
       <p>
         {para}
       </p>

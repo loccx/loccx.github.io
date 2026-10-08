@@ -1,9 +1,11 @@
 /**
- * Interface registry — the seam between "the site" and "how it's presented".
+ * Interface registry + navigation stack — the seam between "the site" and
+ * "how it's presented".
  *
  * An Interface is anything that renders into a root element. Register them by
- * id, open/close them by id. Add a new file in src/interfaces/, register it in
- * main.ts, and it can be swapped in without touching anything else.
+ * id, `open(id, arg)` pushes one on top of the stack, `close()` (or Esc) pops
+ * back to whatever was underneath. Add a new file in src/interfaces/,
+ * register it in main.ts, and it can be swapped in without touching the rest.
  */
 
 export interface Interface {
@@ -12,11 +14,11 @@ export interface Interface {
   unmount?(): void;
 }
 
-export type InterfaceFactory = () => Interface;
+export type InterfaceFactory = (arg?: unknown) => Interface;
 
 export class InterfaceManager {
   private factories = new Map<string, InterfaceFactory>();
-  private active: { iface: Interface; root: HTMLElement } | null = null;
+  private stack: { iface: Interface; root: HTMLElement }[] = [];
   private host: HTMLElement;
 
   constructor(parent: HTMLElement) {
@@ -33,21 +35,26 @@ export class InterfaceManager {
     this.factories.set(id, factory);
   }
 
-  open(id: string) {
+  open(id: string, arg?: unknown) {
     const factory = this.factories.get(id);
     if (!factory) throw new Error(`no interface registered as '${id}'`);
-    this.close();
-    const iface = factory();
+    const top = this.stack[this.stack.length - 1];
+    if (top) top.root.style.display = "none";
+    const iface = factory(arg);
     const root = document.createElement("div");
     root.dataset.interface = id;
     this.host.appendChild(root);
     iface.mount(root);
-    this.active = { iface, root };
+    this.stack.push({ iface, root });
   }
 
+  /** pop the current interface, revealing the one underneath */
   close() {
-    this.active?.iface.unmount?.();
-    this.active?.root.remove();
-    this.active = null;
+    const top = this.stack.pop();
+    if (!top) return;
+    top.iface.unmount?.();
+    top.root.remove();
+    const prev = this.stack[this.stack.length - 1];
+    if (prev) prev.root.style.display = "";
   }
 }

@@ -1,9 +1,92 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "BigBlue Terminal";
+  src: url("/fonts/BigBlue_TerminalPlus.ttf") format("truetype");
+  font-display: swap;
+}
+
+:root {
+  color-scheme: dark;
+}
+
 html,
 body {
   margin: 0;
   height: 100%;
-  font-family: ui-monospace, "Cascadia Mono", "JetBrains Mono", Menlo, Consolas,
-    monospace;
+  background: #000;
+  color: #b8b8b8;
+  font-family: "BigBlue Terminal", ui-monospace, Menlo, Consolas, monospace;
+  font-size: 16px;
+  line-height: 1.35;
+  -webkit-font-smoothing: none;
+}
+
+/* everything styled at the element level — plain html, archival file vibe */
+
+::selection {
+  background: #b8b8b8;
+  color: #000;
+}
+
+a {
+  color: #5f87ff;
+  text-decoration: underline;
+}
+a:visited {
+  color: #875fd7;
+}
+a:hover {
+  background: #5f87ff;
+  color: #000;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: #e8e8e8;
+  font-weight: bold;
+  margin: 1.2em 0 0.6em;
+}
+h1 {
+  font-size: 1.25em;
+}
+h2,
+h3,
+h4 {
+  font-size: 1em;
+}
+
+p {
+  margin: 0.6em 0;
+}
+
+ul {
+  margin: 0.6em 0;
+  padding-left: 2em;
+  list-style: "- ";
+}
+
+pre {
+  margin: 0.6em 0;
+  padding: 0.5em 1em;
+  border-left: 2px solid #333;
+  overflow-x: auto;
+}
+
+code {
+  font-family: inherit;
+  color: #9ece9e;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #333;
+  margin: 1.5em 0;
+}
+
+.muted {
+  color: #666;
 }

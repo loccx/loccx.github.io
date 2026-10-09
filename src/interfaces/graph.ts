@@ -25,9 +25,9 @@ export class GraphInterface implements Interface {
   mount(root: HTMLElement) {
     const posts = allPosts();
     const wrap = document.createElement("div");
-    wrap.className = "fixed inset-0 bg-zinc-950";
+    wrap.className = "fixed inset-0";
     wrap.innerHTML = `
-      <div class="absolute top-4 left-5 text-zinc-500 text-sm select-none">
+      <div class="absolute top-4 left-5 muted select-none" style="font-size: 14px">
         writing · drag nodes · click to read · esc to go back
       </div>`;
     const canvas = document.createElement("canvas");
@@ -168,15 +168,15 @@ export class GraphInterface implements Interface {
         ctx.lineTo(b.x, b.y);
         ctx.stroke();
       }
-      ctx.font = "12px ui-monospace, monospace";
+      ctx.font = '14px "BigBlue Terminal", monospace';
       ctx.textAlign = "center";
       for (const n of nodes) {
         const hot = n === hovered || n === dragged;
         ctx.beginPath();
         ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-        ctx.fillStyle = hot ? "#fbbf24" : "#a1a1aa";
+        ctx.fillStyle = hot ? "#5f87ff" : "#a1a1aa";
         ctx.fill();
-        ctx.fillStyle = hot ? "#fbbf24" : "#71717a";
+        ctx.fillStyle = hot ? "#5f87ff" : "#71717a";
         ctx.fillText(n.title, n.x, n.y + n.r + 16);
       }
       ctx.setTransform(1, 0, 0, 1, 0, 0);

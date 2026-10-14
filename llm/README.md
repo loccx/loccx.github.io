@@ -85,12 +85,27 @@ contract the site expects (already coded in src/interfaces/llm.ts):
 ```c
 int          llm_load(const uint8_t* weights, int len);
 int          llm_forward(const int* ids, int n);    // returns 0 ok
-const float* llm_logits();                          // [vocab]
-const float* llm_activations(int layer, int part);  // part 0=attn,1=mlp
+const float* llm_logits();                          // [vocab] last pos
+const float* llm_embedding();                       // [d]    last pos
+int          llm_vocab_size();
+int          llm_ctx();                             // max seq len
+int          llm_d_model();
+int          llm_n_layers();
+int          llm_n_head();
+const float* llm_activations(int layer, int part);
 int          llm_activations_len(int layer, int part);
 ```
+`part` per layer: 0 = attention weights [n_head, ctx, ctx] indexed
+`h*ctx*ctx + q*ctx + k` (only q,k < n meaningful), 1 = attn block out at
+last position [d], 2 = mlp hidden at last position [4d], 3 = mlp block out
+at last position [d]. suggested `activations` layout in Model::forward:
+`[0]`=embedding then per layer the four part tensors, i.e.
+`acts[1 + layer*4 + part]`.
+
 js encodes text via vocab.txt, calls forward, samples logits itself, and
-reads the activation pointers straight out of wasm memory for the viz.
+reads the activation pointers straight out of wasm memory for the viz:
+attention heatmaps per head, every neuron's activation per stage, and the
+next-token distribution — so save what forward computes in g_acts.
 
 ## debugging
 

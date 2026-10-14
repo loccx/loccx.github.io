@@ -32,8 +32,13 @@ struct Model {
   void init(int vocab_size);
 
   // TODO(you): forward over the full sequence ids (len <= ctx).
-  // returns logits [n, vocab]. fills `activations` if non-null with
-  // per-layer per-head attention weights and mlp outputs for the viz.
+  // returns logits [n, vocab]. fills `activations` if non-null:
+  //   [0]              = last-position embedding (token_emb + pos_emb) [d]
+  //   [1 + l*4 + 0]    = attention weights [n_head, ctx, ctx]
+  //   [1 + l*4 + 1]    = attn block out at last position [d]
+  //   [1 + l*4 + 2]    = mlp hidden at last position [4d]
+  //   [1 + l*4 + 3]    = mlp block out at last position [d]
+  // (the site's viz reads exactly these — see README §5)
   Tensor forward(const std::vector<int>& ids,
                  std::vector<Tensor>* activations = nullptr);
 

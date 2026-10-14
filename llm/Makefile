@@ -12,7 +12,7 @@ wasm: src/wasm.cpp $(SRC)
 	$(EMCC) -O2 -std=c++17 \
 	  -s WASM=1 -s MODULARIZE=1 -s EXPORT_ES6=1 \
 	  -s ALLOW_MEMORY_GROWTH=1 \
-	  -s EXPORTED_FUNCTIONS='["_llm_load","_llm_forward","_llm_logits","_llm_vocab_size","_llm_n_layers","_llm_activations","_llm_activations_len","_malloc","_free"]' \
+	  -s EXPORTED_FUNCTIONS='["_llm_load","_llm_forward","_llm_logits","_llm_embedding","_llm_vocab_size","_llm_ctx","_llm_d_model","_llm_n_layers","_llm_n_head","_llm_activations","_llm_activations_len","_malloc","_free"]' \
 	  -o ../public/llm/llm.js $^
 
 clean:

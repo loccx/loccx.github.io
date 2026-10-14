@@ -1,6 +1,8 @@
 #pragma once
 
 #include "tensor.h"
+#include <cstddef>
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -42,7 +44,9 @@ struct Model {
   Tensor forward(const std::vector<int>& ids,
                  std::vector<Tensor>* activations = nullptr);
 
-  // TODO(you): serialize every tensor to weights.bin in the README order
+  // serialize/parse weights.bin in the README order. load_mem is the same
+  // parse from an in-memory buffer (the wasm boundary uses it).
   bool save(const std::string& path) const;
   bool load(const std::string& path);
+  bool load_mem(const uint8_t* buf, size_t len);
 };

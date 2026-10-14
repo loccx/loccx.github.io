@@ -2,3 +2,9 @@ node_modules
 dist
 .DS_Store
 *.local
+
+# llm native build artifacts (regenerable via make)
+llm/train
+llm/weights.bin
+llm/vocab.txt
+llm/train_run.log

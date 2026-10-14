@@ -1,11 +1,13 @@
 # llm/
 
 a tiny transformer, trained only on `corpus.txt`, that answers questions
-about key. everything below is yours to implement — the plumbing (tokenizer,
-build, wasm boundary, site viz) is already wired.
+about key — running in the browser as webassembly, visualized down to
+every neuron.
 
 the point: a model small enough that you can see every wire. d_model=32,
 2 layers, 2 heads, ~60k params. it memorizes the corpus; that's the feature.
+everything is plain c++ with no dependencies — the sections below explain
+each piece in the order you'd build them yourself.
 
 ## build
 
@@ -36,9 +38,9 @@ A: c++ stuff, small neural nets, keyboards
 inference convention: feed `Q: <question>\nA:` then generate until `\n\n`.
 write lots of pairs. rephrase the same fact a few ways — that's your dataset.
 
-## implement in this order
+## how it works (read in this order)
 
-### 1. `src/tensor.h` — the math primitives
+### 1. `src/tensor.cpp` — the math primitives
 - `matmul(a, b)` — [m,k] x [k,n]
 - `softmax(v)` — subtract max first or it explodes
 - `layernorm(v, w, b)` — mean/var + affine, eps=1e-5
@@ -61,11 +63,11 @@ one bug everyone writes — a model that reads the future looks amazing in
 training and generates garbage.
 
 ### 3. `src/train.cpp` — the learning loop
-- sample a random window of ctx tokens from the corpus
-- forward → cross-entropy loss on predicting token t+1 from t
-- backprop. write it by hand (chain rule through each op) or do a
-  micrograd-style autograd on the tensor — both teach you the same thing
-- adam (m, v, beta1=.9, beta2=.999, eps=1e-8), lr ~1e-3
+- a ~40-line tensor autograd: each op records a backward closure, the
+  tape walks in reverse. (bug worth knowing: closures that capture their
+  own node create a shared_ptr cycle — pass the node as an argument)
+- sample a random ctx window → forward → cross-entropy → backward → adam
+  (m, v, beta1=.9, beta2=.999, eps=1e-8), lr 1e-3, 60k iters, ~10 min on cpu
 - overfit. corpus is kilobytes; memorization is the goal, not a bug
 
 ### 4. `src/export` — weights.bin + vocab.txt

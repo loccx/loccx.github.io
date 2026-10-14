@@ -1,6 +1,6 @@
 CXX ?= g++
 CXXFLAGS ?= -O2 -std=c++17 -Wall -Wextra
-EMCC ?= emcc
+EMCC ?= em++
 
 SRC := src/tokenizer.cpp src/tensor.cpp src/model.cpp
 
@@ -13,7 +13,9 @@ wasm: src/wasm.cpp $(SRC)
 	  -s WASM=1 -s MODULARIZE=1 -s EXPORT_ES6=1 \
 	  -s ALLOW_MEMORY_GROWTH=1 \
 	  -s EXPORTED_FUNCTIONS='["_llm_load","_llm_forward","_llm_logits","_llm_embedding","_llm_vocab_size","_llm_ctx","_llm_d_model","_llm_n_layers","_llm_n_head","_llm_activations","_llm_activations_len","_malloc","_free"]' \
+	  -s EXPORTED_RUNTIME_METHODS='["HEAPF32","HEAPU8","HEAP32"]' \
 	  -o ../public/llm/llm.js $^
+	cp weights.bin vocab.txt ../public/llm/
 
 clean:
 	rm -f train ../public/llm/llm.js ../public/llm/llm.wasm weights.bin vocab.txt

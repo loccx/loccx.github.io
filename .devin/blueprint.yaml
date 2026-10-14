@@ -1,0 +1,17 @@
+initialize: |
+  # emscripten SDK for `make wasm` (idempotent)
+  if [ ! -d "$HOME/emsdk" ]; then
+    git clone --depth 1 https://github.com/emscripten-core/emsdk "$HOME/emsdk"
+  fi
+  "$HOME/emsdk/emsdk" install latest
+  "$HOME/emsdk/emsdk" activate latest
+maintenance: |
+  bun install
+knowledge:
+  - name: build
+    contents: |
+      bun run build   # vite + tsc to dist/
+  - name: llm
+    contents: |
+      # native train (~10min): (cd llm && make && ./train)
+      # wasm for site: source ~/emsdk/emsdk_env.sh && (cd llm && make wasm)

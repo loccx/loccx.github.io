@@ -14,7 +14,8 @@ export class HomeInterface implements Interface {
 
         <h2>index</h2>
         <ul>
-          <li><a href="#" data-open>writing/</a> — notes, obsidian-style graph</li>
+          <li><a href="#" data-open="llm">llm/</a> — a tiny transformer that only knows me</li>
+          <li><a href="#" data-open="graph">writing/</a> — notes, obsidian-style graph</li>
           <li><a href="https://github.com/loccx">github.com/loccx</a></li>
         </ul>
 
@@ -36,9 +37,11 @@ spans lines
         <hr />
         <p class="muted">last updated: recently</p>
       </main>`;
-    root.querySelector("[data-open]")!.addEventListener("click", (e) => {
-      e.preventDefault();
-      this.open("graph");
+    root.querySelectorAll("[data-open]").forEach((el) => {
+      el.addEventListener("click", (e) => {
+        e.preventDefault();
+        this.open((el as HTMLElement).dataset.open!);
+      });
     });
   }
 }

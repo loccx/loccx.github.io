@@ -1,6 +1,6 @@
 # loccx.github.io
 
-personal site. bun + typescript + vite + tailwind, deployed to github pages.
+personal site. bun + vite, static page, deployed to github pages.
 
 ## dev
 
@@ -12,9 +12,9 @@ bun run build    # type-check + build to dist/
 
 ## structure
 
-- `src/ui/manager.ts` — interface registry: `ui.register(id, factory)`, `ui.open(id)`
-- `src/interfaces/` — one file per interface; register in `src/main.ts`
-- `src/main.ts` — entry point
+- `index.html` — the whole page
+- `src/style.css` — styling
+- `public/resume.pdf` — served at `/resume.pdf`
 
 ## deploy
 

@@ -14,7 +14,6 @@ export class HomeInterface implements Interface {
 
         <h2>index</h2>
         <ul>
-          <li><a href="#" data-open="llm">llm/</a> — a tiny transformer that only knows me</li>
           <li><a href="#" data-open="graph">writing/</a> — notes, obsidian-style graph</li>
           <li><a href="https://github.com/loccx">github.com/loccx</a></li>
         </ul>
